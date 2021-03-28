@@ -1,10 +1,15 @@
-from collections import defaultdict
+import random
 from transform import build_transform
 
 
 class Augmentor:
     """
     Take batch of images and do augmentation over them.
+    When config.pipeline == 'default', use the default pipeline for all operations. And the
+    Augmentor.transform_pipeline is a list of transform.Transform.
+    When config.pipeline == 'RL_searched', use the auto-aug searched pipeline for selected operations.
+    And the Augmentor.transform_pipeline is a list of sub-policies, which are lists of transform.Transform.
+
     Args:
         config (addict.Dict): config specs.
     """
@@ -14,8 +19,17 @@ class Augmentor:
 
     def build_pipeline(self):
         transform_pipeline = []
-        for transform_config in self.config.aug_pipeline:
-            transform_pipeline.append(build_transform(transform_config))
+        if self.config.pipeline == 'default':
+            for transform_config in self.config.default_pipeline:
+                transform_pipeline.append(build_transform(transform_config))
+        elif self.config.pipeline == 'RL_searched':
+            for sub_policy in self.config.RL_searched_pipeline:
+                sub_pipeline = []
+                for transform_config in sub_policy:
+                    sub_pipeline.append(build_transform(transform_config))
+                transform_pipeline.append(sub_pipeline)
+        else:
+            raise ValueError(f"Expect pipeline types: (default, RL_searched), got {self.config.pipeline}")
         return transform_pipeline
 
     def augment(self, data, raw_input_idx):
@@ -30,7 +44,9 @@ class Augmentor:
         cur_batch_size = len(data)
         for i in range(cur_batch_size):
             image_group = data[i]
-            for trans_op in self.transform_pipeline:
+            batch_pipeline = self.transform_pipeline if self.config.pipeline == 'default'\
+                else random.choice(self.transform_pipeline)
+            for trans_op in batch_pipeline:
                 image_group = trans_op(image_group, raw_input_idx)
             augmented.append(image_group)
         return augmented
