@@ -1,8 +1,7 @@
 import random
 from os import listdir
 from os.path import isfile, isdir, join
-from collections import defaultdict
-from PIL import Image
+from PIL import Image, ImageOps
 
 
 class DataLoader:
@@ -71,15 +70,15 @@ if __name__ == '__main__':
     dataloader = DataLoader(source_dirs, image_names)
     for batch in dataloader:
         print(batch)
-        img = batch[1]['normal'][0]
+        img = batch[1][0][2]
         for _ in range(5):
-            gen_rand_value = lambda: random.uniform(-90, 90)
+            gen_rand_value = lambda: random.uniform(-45, 45)
             value = gen_rand_value()
             print(value)
-            rotated = img.convert("RGBA").rotate(value)
-            rotated = Image.composite(rotated,
-                                      Image.new("RGBA", rotated.size, (128,) * 4),
-                                      rotated).convert(img.mode)
+            rotated = img.rotate(value)
+            rotated = rotated.transform(
+                rotated.size, Image.AFFINE, (1, 0.1, 0, 0, 1, 0))
+            rotated = ImageOps.autocontrast(rotated)
             rotated.show()
 
     print('U can really dance')

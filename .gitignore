@@ -1,6 +1,7 @@
 env/
 data/
 outputs/
+concat/
 .idea/
 
 /.vscode/*
@@ -9,3 +10,4 @@ outputs/
 *log*
 
 *.pyc
+*.DS_Store
