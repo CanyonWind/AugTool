@@ -1,2 +1,11 @@
 env/
 data/
+outputs/
+.idea/
+
+/.vscode/*
+/__pycache__/*
+/.idea/*
+*log*
+
+*.pyc

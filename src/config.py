@@ -29,7 +29,7 @@ def load_config(file_path):
 
 
 if __name__ == '__main__':
-    config_path = '../config/synthetic_3d_config.py'
+    config_path = '../configs/synthetic_3d_config.py'
     config = load_config(config_path)
     pp = pprint.PrettyPrinter(indent=4)
     pp.pprint(config)

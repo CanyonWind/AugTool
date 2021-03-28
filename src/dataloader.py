@@ -1,6 +1,8 @@
+import random
+from os import listdir
+from os.path import isfile, isdir, join
 from collections import defaultdict
-import cv2
-import numpy as np
+from PIL import Image
 
 
 class DataLoader:
@@ -20,6 +22,9 @@ class DataLoader:
         self.batch_size = batch_size
         self.keep_last_batch = keep_last_batch
 
+    def shuffle(self):
+        random.shuffle(self.img_names)
+
     def __iter__(self):
         self.index = 0
         return self
@@ -29,39 +34,35 @@ class DataLoader:
         Fetch next batch.
         Returns:
             list: List of image names for this batch
-            dict: Dict of {src_name: src_batch} pair. Each src_batch is a [N, H, W, C] numpy array.
+            list: List of list. The inner list contains the different sources, Images, for one instance.
+                  The sequence of the inner list follows the given source_dirs.
         """
         if self.index >= len(self.img_names) or (not self.keep_last_batch and
                                                  len(self.img_names) - self.index < self.batch_size):
             raise StopIteration
 
         batch_size = min(len(self.img_names) - self.index, self.batch_size)
-        batch = defaultdict(list)
-        dir2name = {src_dir: src_dir.split('/')[-1] for src_dir in self.source_dirs}
+        batch = []
         img_names = []
         # load image batch and collate to numpy array
         for _ in range(batch_size):
-            for src_dir in self.source_dirs:
-                src = dir2name[src_dir]
-                self.load(src_dir, self.img_names[self.index], batch[src])
+            image_group = []
+            for i, src_dir in enumerate(self.source_dirs):
+                self.load(src_dir, self.img_names[self.index], image_group)
+            batch.append(image_group)
             img_names.append(self.img_names[self.index])
             self.index += 1
-        for src_dir in self.source_dirs:
-            src = dir2name[src_dir]
-            batch[src] = np.stack(batch[src])
-
         return img_names, batch
 
     @staticmethod
     def load(source_dir, img_name, target_pool):
-        img = cv2.imread(join(source_dir, img_name))
+        img = Image.open(join(source_dir, img_name))
         target_pool.append(img)
         return
 
 
 if __name__ == '__main__':
-    from os.path import isfile, isdir, join
-    from os import listdir
+    import random
     data_root = '../data'
     source_dirs = [join(data_root, dir_name) for dir_name in listdir(data_root)
                    if isdir(join(data_root, dir_name))]
@@ -70,4 +71,15 @@ if __name__ == '__main__':
     dataloader = DataLoader(source_dirs, image_names)
     for batch in dataloader:
         print(batch)
+        img = batch[1]['normal'][0]
+        for _ in range(5):
+            gen_rand_value = lambda: random.uniform(-90, 90)
+            value = gen_rand_value()
+            print(value)
+            rotated = img.convert("RGBA").rotate(value)
+            rotated = Image.composite(rotated,
+                                      Image.new("RGBA", rotated.size, (128,) * 4),
+                                      rotated).convert(img.mode)
+            rotated.show()
+
     print('U can really dance')

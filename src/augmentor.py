@@ -1,5 +1,4 @@
-from dataloader import DataLoader
-from config import load_config
+from collections import defaultdict
 from transform import build_transform
 
 
@@ -19,43 +18,20 @@ class Augmentor:
             transform_pipeline.append(build_transform(transform_config))
         return transform_pipeline
 
-    def save_results(self, img_names, data, aug_idx):
-        output_dir = self.config.output_dir
-
-    def augment(self, img_names, data, aug_idx, save=False):
+    def augment(self, data):
         """
         Take a batch of data and do augmentation sequentially according to the pipeline.
         Args:
-            img_names (list): List of image names.
-            data (dict): Dict of {src_name: src_batch} pair.
-                         Each src_batch is a [N, H, W, C] numpy array.
-            aug_idx (int): Augmentation index.
-            save (bool): Whether to save the output after augmentation.
+            data (list): List of list. The inner list contains the different sources, Images, for one instance.
+                  The sequence of the inner list follows the given source_dirs.
         """
-        for trans_op in self.transform_pipeline:
-            data = trans_op(data)
-        if save:
-            self.save_results(img_names, data, aug_idx)
-        return data
+        augmented = []
+        cur_batch_size = len(data)
+        for i in range(cur_batch_size):
+            image_group = data[i]
+            for trans_op in self.transform_pipeline:
+                image_group = trans_op(image_group)
+            augmented.append(image_group)
+        return augmented
 
-
-if __name__ == '__main__':
-    from os.path import isfile, isdir, join
-    from os import listdir
-
-    config = load_config('../config/synthetic_3d_config.py')
-    data_root = config.data_root
-    source_dirs = [join(data_root, dir_name) for dir_name in listdir(data_root)
-                   if isdir(join(data_root, dir_name))]
-    image_names = [img_name for img_name in listdir(join(data_root, 'rgb'))
-                   if isfile(join(data_root, 'rgb', img_name))]
-
-    # initialize dataloader and augmentor
-    dataloader = DataLoader(source_dirs, image_names)
-    augmentor = Augmentor(config)
-    for batch_tuple in dataloader:
-        img_names, batch = batch_tuple
-        for aug_idx in range(config.aug_times):
-            augmentor.augment(img_names, batch, aug_idx, save=True)
-    print('U can really dance')
 
