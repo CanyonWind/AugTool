@@ -12,14 +12,14 @@ def parse_args():
     parser = argparse.ArgumentParser(description='An augmentor to load, augment and save data from multi-sources.')
     parser.add_argument('--config', type=str,
                         default='./configs/synthetic_3d_config.py',
-                        help='the config file path')
+                        help='The config file path.')
     parser.add_argument('--source-dirs', nargs='+',
                         help='<Required> Specify which sources to do augmentation', required=True)
-    parser.add_argument('--output-dir', type=str, help='the output directory path.')
+    parser.add_argument('--output-dir', type=str, help='The output directory path.')
     parser.add_argument('--count', type=int, help='Number of times to do augmentation.')
     parser.add_argument('--photo-distort-all', action='store_true', help='Whether to do photo metric distortion'
-                        'for all sources. If not, only RGB will be applied photo metric distortion.')
-    parser.add_argument('--shuffle-load', action='store_true', help='Whether shuffle the data before loading batch')
+                        'for all sources. If not, only RGB will be applied with photo metric distortions.')
+    parser.add_argument('--shuffle-load', action='store_true', help='Whether to shuffle the data before loading batches.')
     parser.add_argument('--pipeline', type=str, choices=['default', 'RL_searched'], help='Which pipeline to apply.')
     parser.add_argument('--batch-size', type=int, help='Batch size.')
 
@@ -49,7 +49,6 @@ def save_results(src_names, img_names, data, epoch, output_dir):
 
 
 def main():
-    # TODO: add comment line inputs for output_dir, aug_times
     config = load_config(args.config, args.photo_distort_all)
     if args.output_dir:
         config.data.output_dir = args.output_dir
