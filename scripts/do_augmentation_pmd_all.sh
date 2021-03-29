@@ -5,4 +5,5 @@ python src/augment.py \
     --count 10 \
     --config ./configs/synthetic_3d_config.py \
     --pipeline default \
-    --batch-size 4 --shuffle-load
+    --batch-size 4 --shuffle-load \
+    --photo-distort-all 
