@@ -21,6 +21,7 @@ def parse_args():
                         'for all sources. If not, only RGB will be applied photo metric distortion.')
     parser.add_argument('--shuffle-load', action='store_true', help='Whether shuffle the data before loading batch')
     parser.add_argument('--pipeline', type=str, choices=['default', 'RL_searched'], help='Which pipeline to apply.')
+    parser.add_argument('--batch-size', type=int, help='Batch size.')
 
     args = parser.parse_args()
     return args
@@ -56,6 +57,8 @@ def main():
         config.aug_times = args.count
     if args.shuffle_load:
         config.data.shuffle = args.shuffle_load
+    if args.batch_size:
+        config.data.batch_size = args.batch_size
 
     source_dirs = args.source_dirs
     src_names = [src_dir.split('/')[-1] for src_dir in source_dirs]
@@ -64,7 +67,7 @@ def main():
                    if isfile(join(source_dirs[0], img_name))]
 
     # initialize dataloader and augmentor
-    dataloader = DataLoader(source_dirs, image_names)
+    dataloader = DataLoader(source_dirs, image_names, batch_size=config.data.batch_size)
     augmentor = Augmentor(config)
     for epoch in range(config.aug_times):
         if config.data.shuffle_load:

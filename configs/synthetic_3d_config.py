@@ -2,9 +2,10 @@
 dataset_type = 'Synthetic3D'
 aug_times = 10
 data = dict(
-    root='../data',
-    output_dir='../outputs',
+    root='./data',
+    output_dir='./outputs',
     shuffle_load=True,
+    batch_size=4,
 )
 
 # Augmentation settings
@@ -43,4 +44,5 @@ RL_searched_pipeline = [
      dict(type='Posterize', apply_prob=0.6, value_range=(6, 6), apply_all=photo_metric_distortion_for_all)],
     [dict(type='Equalize', apply_prob=0.4, apply_all=photo_metric_distortion_for_all),
      dict(type='Solarize', apply_prob=0.2, value_range=(4, 4), apply_all=photo_metric_distortion_for_all)],
+    # 19 sub-policies more. Not listing all here for better clarity.
 ]
