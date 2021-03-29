@@ -1,8 +1,7 @@
 from os.path import isfile, isdir, join, splitext
 from os import listdir, makedirs, mkdir
 import argparse
-from PIL import Image
-from PIL import ImageMath
+from PIL import Image, ImageMath
 
 from config import load_config
 from dataloader import DataLoader
@@ -16,6 +15,13 @@ def parse_args():
                         help='the config file path')
     parser.add_argument('--source-dirs', nargs='+',
                         help='<Required> Specify which sources to do augmentation', required=True)
+    parser.add_argument('--output-dir', type=str, help='the output directory path.')
+    parser.add_argument('--count', type=int, help='Number of times to do augmentation.')
+    parser.add_argument('--photo-distort-all', action='store_true', help='Whether to do photo metric distortion'
+                        'for all sources. If not, only RGB will be applied photo metric distortion.')
+    parser.add_argument('--shuffle-load', action='store_true', help='Whether shuffle the data before loading batch')
+    parser.add_argument('--pipeline', type=str, choices=['default', 'RL_searched'], help='Which pipeline to apply.')
+
     args = parser.parse_args()
     return args
 
@@ -37,7 +43,7 @@ def save_results(src_names, img_names, data, epoch, output_dir):
             img = image_group[j]
             if not isdir(save_image_dir):
                 mkdir(save_image_dir)
-            img.save(join(save_image_dir, '{:04d}.png'.format(epoch)))
+            img.save(join(save_image_dir, '{:04d}.png'.format(epoch)), compress_level=1)
         concat_img = concat(image_group[1], image_group[0], image_group[2])
         concat_dir = join(output_dir, 'concat-{}'.format(splitext(img_name)[0]))
         if not isdir(concat_dir):
@@ -47,13 +53,16 @@ def save_results(src_names, img_names, data, epoch, output_dir):
 
 
 def main():
-    # TODO: add comment line inputs for
-    #       source_dirs, config_path, data_root, output_dir, aug_times
-    config = load_config(args.config)
-    data_root = config.data.root
+    # TODO: add comment line inputs for output_dir, aug_times
+    config = load_config(args.config, args.photo_distort_all)
+    if args.output_dir:
+        config.data.output_dir = args.output_dir
+    if args.count:
+        config.aug_times = args.count
+    if args.shuffle_load:
+        config.data.shuffle = args.shuffle_load
+
     source_dirs = args.source_dirs
-    source_dirs = [join(data_root, dir_name) for dir_name in listdir(data_root)
-                   if isdir(join(data_root, dir_name))]
     src_names = [src_dir.split('/')[-1] for src_dir in source_dirs]
     raw_input_idx = src_names.index('rgb') if 'rgb' in src_names else -1
     image_names = [img_name for img_name in listdir(source_dirs[0])

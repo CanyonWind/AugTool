@@ -127,7 +127,7 @@ class TranslateY(Transform):
 class AutoContrast(Transform):
     def __init__(self, config):
         super(AutoContrast, self).__init__(config)
-        self.apply_all = config.apply_all
+        self.apply_all = config.apply_all[0]
         self.apply_prob = config.apply_prob
 
     def __call__(self, data, raw_input_idx):
@@ -147,7 +147,7 @@ class AutoContrast(Transform):
 class Invert(Transform):
     def __init__(self, config):
         super(Invert, self).__init__(config)
-        self.apply_all = config.apply_all
+        self.apply_all = config.apply_all[0]
         self.apply_prob = config.apply_prob
 
     def __call__(self, data, raw_input_idx):
@@ -167,7 +167,7 @@ class Invert(Transform):
 class Equalize(Transform):
     def __init__(self, config):
         super(Equalize, self).__init__(config)
-        self.apply_all = config.apply_all
+        self.apply_all = config.apply_all[0]
         self.apply_prob = config.apply_prob
 
     def __call__(self, data, raw_input_idx):
@@ -200,11 +200,27 @@ class Mirror(Transform):
         return augmented
 
 
+class Flip(Transform):
+    def __init__(self, config):
+        super(Flip, self).__init__(config)
+        self.apply_prob = config.apply_prob
+
+    def __call__(self, data, raw_input_idx):
+        prob = random.random()
+        augmented = []
+        for i, img in enumerate(data):
+            if prob < self.apply_prob:
+                augmented.append(ImageOps.flip(img))
+            else:
+                augmented.append(img)
+        return augmented
+
+
 class Solarize(Transform):
     def __init__(self, config):
         super(Solarize, self).__init__(config)
         self.apply_prob = config.apply_prob
-        self.apply_all = config.apply_all
+        self.apply_all = config.apply_all[0]
         self.value_range = config.value_range
         self.gen_rand_value = lambda: random.uniform(self.value_range[0], self.value_range[1])
 
@@ -227,7 +243,7 @@ class Posterize(Transform):
     def __init__(self, config):
         super(Posterize, self).__init__(config)
         self.apply_prob = config.apply_prob
-        self.apply_all = config.apply_all
+        self.apply_all = config.apply_all[0]
         self.value_range = config.value_range
         self.gen_rand_value = lambda: random.randint(self.value_range[0], self.value_range[1])
 
@@ -250,7 +266,7 @@ class Contrast(Transform):
     def __init__(self, config):
         super(Contrast, self).__init__(config)
         self.apply_prob = config.apply_prob
-        self.apply_all = config.apply_all
+        self.apply_all = config.apply_all[0]
         self.value_range = config.value_range
         self.gen_rand_value = lambda: random.uniform(self.value_range[0], self.value_range[1])
 
@@ -273,7 +289,7 @@ class Color(Transform):
     def __init__(self, config):
         super(Color, self).__init__(config)
         self.apply_prob = config.apply_prob
-        self.apply_all = config.apply_all
+        self.apply_all = config.apply_all[0]
         self.value_range = config.value_range
         self.gen_rand_value = lambda: random.uniform(self.value_range[0], self.value_range[1])
 
@@ -296,7 +312,7 @@ class Brightness(Transform):
     def __init__(self, config):
         super(Brightness, self).__init__(config)
         self.apply_prob = config.apply_prob
-        self.apply_all = config.apply_all
+        self.apply_all = config.apply_all[0]
         self.value_range = config.value_range
         self.gen_rand_value = lambda: random.uniform(self.value_range[0], self.value_range[1])
 
@@ -319,7 +335,7 @@ class Sharpness(Transform):
     def __init__(self, config):
         super(Sharpness, self).__init__(config)
         self.apply_prob = config.apply_prob
-        self.apply_all = config.apply_all
+        self.apply_all = config.apply_all[0]
         self.value_range = config.value_range
         self.gen_rand_value = lambda: random.uniform(self.value_range[0], self.value_range[1])
 
@@ -465,6 +481,7 @@ def build_transform(config):
         'Invert': Invert,
         'Equalize': Equalize,
         'Mirror': Mirror,
+        'Flip': Flip,
         'Solarize': Solarize,
         'Posterize': Posterize,
         'Contrast': Contrast,

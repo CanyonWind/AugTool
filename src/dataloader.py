@@ -61,7 +61,6 @@ class DataLoader:
 
 
 if __name__ == '__main__':
-    import random
     data_root = '../data'
     source_dirs = [join(data_root, dir_name) for dir_name in listdir(data_root)
                    if isdir(join(data_root, dir_name))]
@@ -69,16 +68,12 @@ if __name__ == '__main__':
                    if isfile(join(data_root, 'rgb', img_name))]
     dataloader = DataLoader(source_dirs, image_names)
     for batch in dataloader:
-        print(batch)
         img = batch[1][0][2]
         for _ in range(5):
             gen_rand_value = lambda: random.uniform(-45, 45)
             value = gen_rand_value()
-            print(value)
             rotated = img.rotate(value)
             rotated = rotated.transform(
                 rotated.size, Image.AFFINE, (1, 0.1, 0, 0, 1, 0))
             rotated = ImageOps.autocontrast(rotated)
             rotated.show()
-
-    print('U can really dance')

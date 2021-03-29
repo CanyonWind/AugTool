@@ -5,31 +5,29 @@ data = dict(
     root='../data',
     output_dir='../outputs',
     shuffle_load=True,
-    img_norm_cfg=dict(
-        mean=[123.675, 116.28, 103.53],
-        std=[58.395, 57.12, 57.375])
 )
 
 # Augmentation settings
-photo_metric_distortion_for_all = True
+photo_metric_distortion_for_all = [True]
 pipeline = 'default'  # choice of ('default', 'RL_searched')
 default_pipeline = [
-    dict(type='Brightness', apply_prob=1.0, value_range=(0.1, 1.9), apply_all=photo_metric_distortion_for_all),
-    dict(type='Color', apply_prob=1.0, value_range=(0.1, 1.0), apply_all=photo_metric_distortion_for_all),
-    dict(type='Contrast', apply_prob=1.0, value_range=(0.1, 1.9), apply_all=photo_metric_distortion_for_all),
-    dict(type='AutoContrast', apply_prob=0.5, apply_all=photo_metric_distortion_for_all),
-    dict(type='Invert', apply_prob=0.2, apply_all=photo_metric_distortion_for_all),
-    dict(type='Equalize', apply_prob=0.5, apply_all=photo_metric_distortion_for_all),
+    dict(type='Brightness', apply_prob=0.2, value_range=(0.1, 1.9), apply_all=photo_metric_distortion_for_all),
+    dict(type='Color', apply_prob=0.2, value_range=(0.1, 1.0), apply_all=photo_metric_distortion_for_all),
+    dict(type='Contrast', apply_prob=0.2, value_range=(0.1, 1.9), apply_all=photo_metric_distortion_for_all),
+    dict(type='AutoContrast', apply_prob=0.2, apply_all=photo_metric_distortion_for_all),
+    dict(type='Invert', apply_prob=0.05, apply_all=photo_metric_distortion_for_all),
+    dict(type='Equalize', apply_prob=0.05, apply_all=photo_metric_distortion_for_all),
     dict(type='Solarize', apply_prob=0.2, value_range=(0, 256), apply_all=photo_metric_distortion_for_all),
-    dict(type='Posterize', apply_prob=0.5, value_range=(4, 8), apply_all=photo_metric_distortion_for_all),
+    dict(type='Posterize', apply_prob=0.2, value_range=(4, 8), apply_all=photo_metric_distortion_for_all),
     dict(type='Sharpness', apply_prob=1.0, value_range=(0.1, 1.9), apply_all=photo_metric_distortion_for_all),
-    dict(type='RandomResizedCrop', scale=(0.5, 2.0), padding_mode='constant'),
     dict(type='Mirror', apply_prob=0.5),
+    dict(type='Flip', apply_prob=0.2),
     dict(type='Rotate', apply_prob=1.0, value_range=(-30, 30)),
     dict(type='ShearX', apply_prob=1.0, value_range=(-0.25, 0.25)),
     dict(type='ShearY', apply_prob=1.0, value_range=(-0.25, 0.25)),
-    dict(type='TranslateX', apply_prob=1.0, value_range=(-0.45, 0.45)),
-    dict(type='TranslateY', apply_prob=1.0, value_range=(-0.45, 0.45)),
+    dict(type='TranslateX', apply_prob=1.0, value_range=(-0.30, 0.30)),
+    dict(type='TranslateY', apply_prob=1.0, value_range=(-0.30, 0.30)),
+    dict(type='RandomResizedCrop', scale=(0.5, 2.0), padding_mode='constant'),
 ]
 
 # Auto-augmentation trained RL model to explore the optimal augmentation policy combinations.
