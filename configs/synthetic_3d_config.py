@@ -12,6 +12,7 @@ data = dict(
 photo_metric_distortion_for_all = [False]
 pipeline = 'default'  # choice of ('default', 'RL_searched')
 default_pipeline = [
+    # sequence & magnitudes of the applied augmentations
     dict(type='Brightness', apply_prob=0.2, value_range=(0.1, 1.9), apply_all=photo_metric_distortion_for_all),
     dict(type='Color', apply_prob=0.2, value_range=(0.1, 1.0), apply_all=photo_metric_distortion_for_all),
     dict(type='Contrast', apply_prob=0.2, value_range=(0.1, 1.9), apply_all=photo_metric_distortion_for_all),
