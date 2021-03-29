@@ -44,11 +44,6 @@ def save_results(src_names, img_names, data, epoch, output_dir):
             if not isdir(save_image_dir):
                 mkdir(save_image_dir)
             img.save(join(save_image_dir, '{:04d}.png'.format(epoch)), compress_level=1)
-        concat_img = concat(image_group[1], image_group[0], image_group[2])
-        concat_dir = join(output_dir, 'concat-{}'.format(splitext(img_name)[0]))
-        if not isdir(concat_dir):
-            mkdir(concat_dir)
-        concat_img.save(join(concat_dir, '{:04d}.png'.format(epoch)))
     return
 
 

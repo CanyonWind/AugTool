@@ -8,7 +8,7 @@ data = dict(
 )
 
 # Augmentation settings
-photo_metric_distortion_for_all = [True]
+photo_metric_distortion_for_all = [False]
 pipeline = 'default'  # choice of ('default', 'RL_searched')
 default_pipeline = [
     dict(type='Brightness', apply_prob=0.2, value_range=(0.1, 1.9), apply_all=photo_metric_distortion_for_all),
