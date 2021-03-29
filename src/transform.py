@@ -24,9 +24,6 @@ class Transform:
 
 
 class Rotate(Transform):
-    """
-    Rotate the image and fill the gap with specific color.
-    """
     def __init__(self, config):
         super(Rotate, self).__init__(config)
         self.apply_prob = config.apply_prob
