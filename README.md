@@ -10,11 +10,11 @@ source env/bin/activate
 pip install -r requirements.txt
 
 python src/augment.py \
-    --source-dirs ./data/depth ./data/rgb ./data/normal \
+    --source-dirs ./data/rgb ./data/depth ./data/normal \
     --output-dir ./outputs \
     --count 10 
 
-# Alternatively, you can just run
+# Alternatively, you may just run
 sh ./scripts/do_augmentation.sh
 ```
 
