@@ -1,7 +1,7 @@
 import random
 from os import listdir
 from os.path import isfile, isdir, join
-from PIL import Image, ImageOps
+from PIL import Image, ImageOps, ImageMath
 
 
 class DataLoader:
@@ -56,6 +56,8 @@ class DataLoader:
     @staticmethod
     def load(source_dir, img_name, target_pool):
         img = Image.open(join(source_dir, img_name))
+        if img.mode == 'I':
+            img = ImageMath.eval('img/256', {'img': img}).convert('RGB')
         target_pool.append(img)
         return
 
@@ -68,7 +70,7 @@ if __name__ == '__main__':
                    if isfile(join(data_root, 'rgb', img_name))]
     dataloader = DataLoader(source_dirs, image_names)
     for batch in dataloader:
-        img = batch[1][0][2]
+        img = batch[1][0][0]
         for _ in range(5):
             gen_rand_value = lambda: random.uniform(-45, 45)
             value = gen_rand_value()

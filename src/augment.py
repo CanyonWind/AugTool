@@ -27,11 +27,11 @@ def parse_args():
     return args
 
 
-def concat(im1, im2, im3):
-    dst = Image.new('RGB', (im1.width + im2.width + im3.width, im1.height))
-    dst.paste(im1, (0, 0))
-    dst.paste(ImageMath.eval('im/256', {'im': im2}).convert('L'), (im1.width, 0))
-    dst.paste(im3, (im1.width * 2, 0))
+def concat(img1, img2, img3):
+    dst = Image.new('RGB', (img1.width + img2.width + img3.width, img1.height))
+    dst.paste(img1, (0, 0))
+    dst.paste(img2, (img1.width, 0))
+    dst.paste(img3, (img1.width * 2, 0))
     return dst
 
 
