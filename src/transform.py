@@ -18,7 +18,7 @@ class Transform:
                   The sequence of the inner list follows the given source_dirs.
             raw_input_idx (int): The index of the rgb input. -1 means rgb not existed.
         Returns:
-            dict: Dict of {src_name: Image}, where Images are augmented.
+            list: List of Image, the sequence of the Images is determined by the input source directories sequence.
         """
         raise RuntimeError("Illegal call to base class.")
 
