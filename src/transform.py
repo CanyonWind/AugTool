@@ -56,6 +56,7 @@ class ShearX(Transform):
         augmented = []
         for i, img in enumerate(data):
             if prob < self.apply_prob:
+                # https://pillow.readthedocs.io/en/1.7.8/pythondoc-PIL.ImageTransform.html#id6
                 augmented.append(img.transform(img.size, Image.AFFINE, (1, value, 0, 0, 1, 0)))
             else:
                 augmented.append(img)
