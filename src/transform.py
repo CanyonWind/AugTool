@@ -475,16 +475,16 @@ def build_transform(config):
         'ShearY': ShearY,
         'TranslateX': TranslateX,
         'TranslateY': TranslateY,
-        'AutoContrast': AutoContrast,
+        'AutoContrast': AutoContrast,  # remove cutoff, stretch contrast
         'Invert': Invert,
-        'Equalize': Equalize,
+        'Equalize': Equalize,  # uniform distribution of grayscale values
         'Mirror': Mirror,
         'Flip': Flip,
-        'Solarize': Solarize,
-        'Posterize': Posterize,
+        'Solarize': Solarize,  # invert all pixel values above a threshold
+        'Posterize': Posterize,  # Reduce the number of bits
         'Contrast': Contrast,
-        'Color': Color,
-        'Brightness': Brightness,
+        'Color': Color,  # adjust the colour balance, 0.0 black & white, 1.0 original
+        'Brightness': Brightness,  
         'Sharpness': Sharpness,
         'RandomResizedCrop': RandomResizedCrop
     }
