@@ -1,5 +1,5 @@
 # Augmentation tool
-A simple augmentation tool to load, augment and save multi-source input data. This repo contains 17 augmentation 
+A simple augmentation tool to load, augment and save 3D depth/normal prediction data. This repo contains 17 augmentation 
 operations,  and supports [auto-aug](https://arxiv.org/abs/1805.09501) searched augmentation policies.
 ![aug_tool](./resource/augmentation.png)
 
